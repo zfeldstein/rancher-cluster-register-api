@@ -3,6 +3,10 @@ import os
 import json
 import time
 
+from fastapi import FastAPI
+
+app = FastAPI()
+
 RANCHER_HOST = os.environ["RANCHER_HOST"]
 RANCHER_API_VERSION = "v3"
 SSL_VERIFY = False
@@ -47,8 +51,9 @@ def rancher_api_call(
     # if http_method.lower() == "put":
     #     response = httpx.put(url, auth=auth, json=user_hash)
 
-
-def register_cluster(cluster_name):
+@app.get("/register/{cluster_name}")
+async def register_cluster(cluster_name):
+# def register_cluster(cluster_name):
     # Rancher API endpoint to call
     endpoint = "cluster"
     # http Params to pass to endpoint
@@ -93,7 +98,6 @@ def register_cluster(cluster_name):
         registration_manifest_url, http_method="get"
     )
     registration_manifest_resp = json.loads(registration_manifest_resp)
-    print(registration_manifest_resp["manifestUrl"])
+    return registration_manifest_resp["manifestUrl"]
 
 
-register_cluster("test-imp3o3323r4t7")
